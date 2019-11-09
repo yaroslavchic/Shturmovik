@@ -1,0 +1,22 @@
+#include "TXLib.h"
+
+int main()
+{
+    txCreateWindow (800, 600);
+
+    HDC picture = txLoadImage("штурмовик1.bmp");
+
+    txBitBlt(txDC(), 275, 135, 250, 450,  picture, 0, 0);
+
+    txTextOut (50, 50, "ШЛЕМ");
+    txTextOut (50, 150, "БРОНЯ");
+    txTextOut (50, 250, "ЛАПКИ");
+    txTextOut (50, 350, "БЛАСТЕР");
+
+    HDC shlem = txLoadImage("шлем1.bmp");
+    txBitBlt(txDC(), 655, 395, 140, 140,  shlem, 0, 0);
+    HDC shlem2 = txLoadImage("шлем2.bmp");
+    txBitBlt(txDC(), 655, 195, 140, 140,  shlem2, 0, 0);
+    return 0;
+}
+
