@@ -75,19 +75,19 @@ string getChast(Knopka knopka1, string chast)
 
     return chast;
 }
-const int VYSOTA_SHLEM= 120;
-const int SHIRINA_SHLEM = 100;
-const int VYSOTA_BRONI = 120;
-const int SHIRINA_BRONI = 100;
-const int VYSOTA_LAPKI = 120;
-const int SHIRINA_LAPKI = 100;
+const int VYSOTA_SHLEM= 165;
+const int SHIRINA_SHLEM = 155;
+const int VYSOTA_BRONI = 180;
+const int SHIRINA_BRONI = 225;
+const int VYSOTA_LAPKI = 190;
+const int SHIRINA_LAPKI = 180;
 
 int main()
 {
     txCreateWindow (800, 600);
 
     HDC fon = txLoadImage("Pics\\Фон.bmp");
-    HDC picture = txLoadImage("Pics\\штурмовик1.bmp");
+    HDC picture = txLoadImage("Pics\\Штурмовик1.bmp");
 
     Knopka knopka[3];
     knopka[0] = {50, 50, "ШЛЕМ"};
@@ -95,20 +95,35 @@ int main()
     knopka[2] = {50, 250, "ЛАПКИ"};
 
     Kartinka kart[9];
-     kart[0] = {655,     0, SHIRINA_SHLEM, VYSOTA_SHLEM, txLoadImage("Pics\\шлем1.bmp"), "ШЛЕМ", 120, 136};
-     kart[1] = {655,  200, SHIRINA_SHLEM, VYSOTA_SHLEM,  txLoadImage("Pics\\шлем2.bmp"), "ШЛЕМ", 142, 136};
-     kart[2] = {655,  400, SHIRINA_SHLEM, VYSOTA_SHLEM, txLoadImage("Pics\\ШлЕм.bmp"), "ШЛЕМ", 140, 130};
-     kart[3] = {655,     0, SHIRINA_BRONI, VYSOTA_BRONI , txLoadImage("Pics\\броня1.bmp"), "БРОНЯ", 157, 139};
-     kart[4] = {655,  200, SHIRINA_BRONI, VYSOTA_BRONI , txLoadImage("Pics\\броня2.bmp"), "БРОНЯ", 150, 183};
-     kart[5] = {655,  400, SHIRINA_BRONI, VYSOTA_BRONI , txLoadImage("Pics\\броня3.bmp"), "БРОНЯ", 38, 39};
-     kart[6] = {655,      0, SHIRINA_LAPKI, VYSOTA_LAPKI, txLoadImage("Pics\\лапки1.bmp"), "ЛАПКИ", 84, 121};
-     kart[7] = {655,  200, SHIRINA_LAPKI, VYSOTA_LAPKI, txLoadImage("Pics\\лапки2.bmp"), "ЛАПКИ", 100, 123};
-     kart[8] = {655,  400, SHIRINA_LAPKI, VYSOTA_LAPKI, txLoadImage("Pics\\лапки3.bmp"), "ЛАПКИ", 100, 123};
+     kart[0] = {655,     0, 100, 100, txLoadImage("Pics\\шлем1.bmp"), "ШЛЕМ", 120, 136};
+     kart[1] = {655,  200, 100, 100,  txLoadImage("Pics\\шлем2.bmp"), "ШЛЕМ", 142, 136};
+     kart[2] = {655,  400, 100, 100, txLoadImage("Pics\\ШлЕм.bmp"), "ШЛЕМ", 140, 130};
+     kart[3] = {655,     0, 100, 100 , txLoadImage("Pics\\броня1.bmp"), "БРОНЯ", 157, 139};
+     kart[4] = {655,  200, 100, 100 , txLoadImage("Pics\\броня2.bmp"), "БРОНЯ", 150, 164};
+     kart[5] = {655,  400, 100, 100 , txLoadImage("Pics\\броня3.bmp"), "БРОНЯ", 38, 39};
+     kart[6] = {655,      0, 100, 100, txLoadImage("Pics\\лапки1.bmp"), "ЛАПКИ", 121, 84};
+     kart[7] = {655,  200, 100, 100, txLoadImage("Pics\\лапки2.bmp"), "ЛАПКИ", 100, 123};
+     kart[8] = {655,  400, 100, 100, txLoadImage("Pics\\лапки3.bmp"), "ЛАПКИ", 100, 123};
 
+ Kartinka pictr[9];
+    pictr[0] = {320, 130, SHIRINA_SHLEM, VYSOTA_SHLEM};
+    pictr[1] = {320, 130, SHIRINA_SHLEM, VYSOTA_SHLEM};
+    pictr[2] = {320, 130, SHIRINA_SHLEM, VYSOTA_SHLEM};
+    pictr[3] = {280,  285, SHIRINA_BRONI, VYSOTA_BRONI };
+    pictr[4] = {280,  285, SHIRINA_BRONI, VYSOTA_BRONI};
+    pictr[5] = {280,  285, SHIRINA_BRONI, VYSOTA_BRONI};
+    pictr[6] = {330,  400, SHIRINA_LAPKI, VYSOTA_LAPKI};
+    pictr[7] = {330,  400, SHIRINA_LAPKI, VYSOTA_LAPKI};
+    pictr[8] = {330,  400, SHIRINA_LAPKI, VYSOTA_LAPKI};
 
-    Kartinka pictr1 = {300, 200, SHIRINA_SHLEM, VYSOTA_SHLEM, kart[0].picture, "ШЛЕМ"};
-    Kartinka pictr2 = {300, 200, SHIRINA_SHLEM, VYSOTA_SHLEM, kart[1].picture, "ШЛЕМ"};
-    Kartinka pictr3 = {300, 200, SHIRINA_SHLEM, VYSOTA_SHLEM, kart[2].picture, "ШЛЕМ"};
+        for (int i = 0; i < 9; i = i + 1)
+        {
+            pictr[i].picture = kart[i].picture;
+            pictr[i].chast = kart[i].chast;
+            pictr[i].shirina_bmp = kart[i].shirina_bmp;
+            pictr[i].vysota_bmp = kart[i].vysota_bmp;
+        }
+
 
 
 
@@ -128,18 +143,17 @@ int main()
           txTransparentBlt(txDC(), 275, 135, 250, 450,  picture, 0, 0, TX_WHITE);
 
 
-        if (pictr1.clicked)
+
+
+    for (int i = 0; i < 9; i = i + 1)
         {
-            Win32::TransparentBlt(txDC(), pictr1.x, pictr1.y, pictr1.shirina, pictr1.vysota, pictr1.picture, 0, 0, 120, 136, TX_WHITE);
-        }
-        if (pictr2.clicked)
+        if (pictr[i].clicked)
         {
-            Win32::TransparentBlt(txDC(), pictr2.x, pictr2.y, pictr2.shirina, pictr2.vysota, pictr2.picture, 0, 0, 142, 136, TX_WHITE);
+            Win32::TransparentBlt(txDC(), pictr[i].x, pictr[i].y, pictr[i].shirina, pictr[i].vysota, pictr[i].picture, 0, 0, pictr[i].shirina_bmp, pictr[i].vysota_bmp, TX_WHITE);
         }
-         if (pictr3.clicked)
-        {
-            Win32::TransparentBlt(txDC(), pictr3.x, pictr3.y, pictr3.shirina, pictr3.vysota, pictr3.picture, 0, 0, 140, 130, TX_WHITE);
-        }
+
+         }
+
 
 
         for (int i = 0; i < 3; i = i + 1)
@@ -156,31 +170,16 @@ int main()
         }
     }
 
-        if (clickNaKnopka(kart[0], chast))
+    for (int i = 0; i < 9; i = i + 1)
         {
-            pictr1.clicked = true;
+        if (clickNaKnopka(kart[i], chast))
+        {
+            pictr[i].clicked = true;
         }
         else if (txMouseButtons() == 1)
         {
-            pictr1.clicked = false;
+            pictr[i].clicked = false;
         }
-
-        if (clickNaKnopka(kart[1], chast))
-        {
-            pictr2.clicked = true;
-        }
-        else if (txMouseButtons() == 1)
-        {
-            pictr2.clicked = false;
-        }
-
-        if (clickNaKnopka(kart[2], chast))
-        {
-            pictr3.clicked = true;
-        }
-        else if (txMouseButtons() == 1)
-        {
-            pictr3.clicked = false;
         }
 
         txSleep(10);
@@ -188,11 +187,5 @@ int main()
     }
 
 
-
-
-
-
-
     return 0;
 }
-
