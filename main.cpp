@@ -1,20 +1,18 @@
 #include "TXLib.h"
 #include "knopka.cpp"
 #include <string>
-#include <iostream>
-#include <fstream>
 
 using namespace std;
 
 struct Kartinka
 {
+    int y;
     string adress;
+    HDC picture;
     string chast;
     int shirina_bmp;
     int vysota_bmp;
     int x;
-    int y;
-    HDC picture;
     int shirina;
     int vysota;
     bool clicked;
@@ -93,57 +91,28 @@ int main()
     knopka[3] = {50, 300, "Cправочечка"};
 
     Kartinka kart[9];
-    kart[0] = { "Pics\\шлем1.bmp", "ШЛЕМ"};
-    kart[1] = { "Pics\\шлем2.bmp", "ШЛЕМ"};
-    kart[2] = { "Pics\\ШлЕм.bmp", "ШЛЕМ"};
-
-    kart[3] = { "Pics\\броня1.bmp", "БРОНЯ"};
-    kart[4] = { "Pics\\броня2.bmp", "БРОНЯ"};
-    kart[5] = { "Pics\\броня3.bmp", "БРОНЯ"};
-    kart[6] = { "Pics\\лапки1.bmp", "ЛАПКИ"};
-    kart[7] = { "Pics\\лапки2.bmp", "ЛАПКИ"};
-    kart[8] = { "Pics\\лапки3.bmp", "ЛАПКИ"};
-
-
-    int yShlem = 0;
-    int yBronya = 0;
-    int yLapki = 0;
+    kart[0] = {     0,   "Pics\\шлем1.bmp", txLoadImage("Pics\\шлем1.bmp"), "ШЛЕМ", 120};
+    kart[1] = {  200, "Pics\\шлем2.bmp", txLoadImage("Pics\\шлем2.bmp"), "ШЛЕМ", 142};
+    kart[2] = {  400,  "Pics\\ШлЕм.bmp",txLoadImage("Pics\\ШлЕм.bmp"), "ШЛЕМ", 140};
+    kart[3] = {     0,  "Pics\\броня1.bmp", txLoadImage("Pics\\броня1.bmp"), "БРОНЯ", 157};
+    kart[4] = {  200,  "Pics\\броня2.bmp",txLoadImage("Pics\\броня2.bmp"), "БРОНЯ", 159};
+    kart[5] = {  400,   "Pics\\броня3.bmp", txLoadImage("Pics\\броня3.bmp"), "БРОНЯ", 38};
+    kart[6] = {     0,  "Pics\\лапки1.bmp",txLoadImage("Pics\\лапки1.bmp"), "ЛАПКИ", 104};
+    kart[7] = {  200, "Pics\\лапки2.bmp", txLoadImage("Pics\\лапки2.bmp"), "ЛАПКИ", 100};
+    kart[8] = {  400, "Pics\\лапки3.bmp", txLoadImage("Pics\\лапки3.bmp"), "ЛАПКИ", 100};
 
     for (int i = 0; i < 9; i = i + 1)
     {
-        kart[i].picture = txLoadImage(kart[i].adress.c_str());
         kart[i].shirina = 100;
         kart[i].vysota = 100;
         kart[i].x = 655;
         kart[i].vysota_bmp = get_height(kart[i].adress);
         kart[i].shirina_bmp = get_widht(kart[i].adress);
-
-        if (kart[i].chast == "ШЛЕМ")
-        {
-            kart[i].y = yShlem;
-            yShlem = yShlem + 200;
-        }
-
-        if (kart[i].chast == "БРОНЯ")
-        {
-            kart[i].y =yBronya;
-            yBronya =yBronya + 200;
-        }
-
-       if (kart[i].chast == "ЛАПКИ")
-        {
-            kart[i].y =yLapki;
-            yLapki =yLapki + 200;
-        }
     }
-
-
-
 
     Kartinka pictr[9];
     for (int i = 0; i < 9; i = i + 1)
     {
-        pictr[i].adress = kart[i].adress;
         pictr[i].picture = kart[i].picture;
         pictr[i].clicked = false;
         pictr[i].chast = kart[i].chast;
@@ -174,29 +143,6 @@ int main()
     }
 
 
-    ifstream file("C:\\Users\\Student\\Desktop\\1.txt");
-
-    while(file.good())
-    {
-        string stroka_x;
-        string stroka_y;
-        string stroka_adress;
-        getline(file, stroka_x);
-        getline(file, stroka_y);
-        getline(file, stroka_adress);
-
-        for (int i = 0; i < 9; i = i + 1)
-        {
-            if (kart[i].adress == stroka_adress)
-            {
-                pictr[i].x = atoi(stroka_x.c_str());
-                pictr[i].y = atoi(stroka_y.c_str());
-                pictr[i].clicked = true;
-            }
-        }
-    }
-
-    file.close();
 
 
 
@@ -205,7 +151,7 @@ int main()
     bool spravka_vyzvana = false;
     int nomer_vybrannoi_chasti = -10;
 
-    while(!GetAsyncKeyState(VK_ESCAPE))
+    while(true)
     {
         txBegin();
 
@@ -324,18 +270,5 @@ int main()
         txEnd();
     }
 
-
-    ofstream file1("C:\\Users\\Student\\Desktop\\3.txt");
-
-    file1 << pictr[3].x << endl;
-    file1 << pictr[3].y << endl;
-    file1 << pictr[3].adress << endl;
-    file1.close();
- /*    pictr[i].x = atoi(stroka_x2.c_str());
-                pictr[i].y = atoi(stroka_y2.c_str());
-                pictr[i].clicked = true;
- */
     return 0;
 }
-
-
