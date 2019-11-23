@@ -1,56 +1,13 @@
 #include "TXLib.h"
 #include "knopka.cpp"
+#include "kartinka.cpp"
 #include <string>
+
 
 using namespace std;
 
-struct Kartinka
-{
-    int y;
-    string adress;
-    HDC picture;
-    string chast;
-    int shirina_bmp;
-    int vysota_bmp;
-    int x;
-    int shirina;
-    int vysota;
-    bool clicked;
-};
 
-bool clickNaKnopka(Kartinka kart, string vybrannaya_chast)
-{
-        if (txMouseButtons() == 1 &&
-            kart.chast == vybrannaya_chast &&
-            txMouseX() > kart.x &&
-            txMouseX() < kart.x + kart.shirina &&
-            txMouseY() > kart.y &&
-            txMouseY() < kart.y + kart.vysota)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-}
 
-bool clickNaKartinka(Kartinka kart)
-{
-        if (txMouseButtons() == 1 &&
-            kart.clicked &&
-            txMouseX() > kart.x &&
-            txMouseX() < kart.x + kart.shirina &&
-            txMouseY() > kart.y &&
-            txMouseY() < kart.y + kart.vysota)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-}
 int get_widht  (string adress)
 {
 	unsigned char info[54];
@@ -85,27 +42,58 @@ int main()
     HDC picture = txLoadImage("Pics\\Øòóðìîâèê1.bmp");
 
     Knopka knopka[4];
-    knopka[0] = {50, 50, "ØËÅÌ"};
-    knopka[1] = {50, 150, "ÁÐÎÍß"};
-    knopka[2] = {50, 250, "ËÀÏÊÈ"};
+    knopka[0] = {50, 50, "øëåì"};
+    knopka[1] = {50, 150, "áðîíÿ"};
+    knopka[2] = {50, 250, "ëàïêè"};
     knopka[3] = {50, 300, "Cïðàâî÷å÷êà"};
 
     Kartinka kart[9];
-    kart[0] = {     0,   "Pics\\øëåì1.bmp", txLoadImage("Pics\\øëåì1.bmp"), "ØËÅÌ", 120};
-    kart[1] = {  200, "Pics\\øëåì2.bmp", txLoadImage("Pics\\øëåì2.bmp"), "ØËÅÌ", 142};
-    kart[2] = {  400,  "Pics\\ØëÅì.bmp",txLoadImage("Pics\\ØëÅì.bmp"), "ØËÅÌ", 140};
-    kart[3] = {     0,  "Pics\\áðîíÿ1.bmp", txLoadImage("Pics\\áðîíÿ1.bmp"), "ÁÐÎÍß", 157};
-    kart[4] = {  200,  "Pics\\áðîíÿ2.bmp",txLoadImage("Pics\\áðîíÿ2.bmp"), "ÁÐÎÍß", 159};
-    kart[5] = {  400,   "Pics\\áðîíÿ3.bmp", txLoadImage("Pics\\áðîíÿ3.bmp"), "ÁÐÎÍß", 38};
-    kart[6] = {     0,  "Pics\\ëàïêè1.bmp",txLoadImage("Pics\\ëàïêè1.bmp"), "ËÀÏÊÈ", 104};
-    kart[7] = {  200, "Pics\\ëàïêè2.bmp", txLoadImage("Pics\\ëàïêè2.bmp"), "ËÀÏÊÈ", 100};
-    kart[8] = {  400, "Pics\\ëàïêè3.bmp", txLoadImage("Pics\\ëàïêè3.bmp"), "ËÀÏÊÈ", 100};
+    kart[0] = {  "Pics\\øëåì\\øëåì1.bmp"};
+    kart[1] = {  "Pics\\øëåì\\øëåì2.bmp"};
+    kart[2] = {  "Pics\\øëåì\\ØëÅì.bmp"};
+    kart[3] = {  "Pics\\áðîíÿ\\áðîíÿ1.bmp"};
+    kart[4] = {  "Pics\\áðîíÿ\\áðîíÿ2.bmp"};
+    kart[5] = {  "Pics\\áðîíÿ\\áðîíÿ3.bmp"};
+    kart[6] = {  "Pics\\ëàïêè\\ëàïêè1.bmp"};
+    kart[7] = {  "Pics\\ëàïêè\\ëàïêè2.bmp"};
+    kart[8] = {  "Pics\\ëàïêè\\ëàïêè3.bmp"};
 
+    int yShlem = 0;
+    int yBronia = 0;
+    int yLapok = 0;
     for (int i = 0; i < 9; i = i + 1)
     {
-        kart[i].shirina = 100;
+        setlocale(LC_ALL,"Russian");
+
+        string stroka = kart[i].adress;
+        int pos1 = stroka.find("\\");
+        int pos2 = stroka.find("\\", pos1 + 2);
+        kart[i].chast = stroka.substr(pos1 + 1, pos2 - pos1 - 1);
+
+
+        if (kart[i].chast == "ëàïêè")
+        {
+            kart[i].y = yLapok;
+            yLapok = yLapok + 200;
+        }
+
+        if (kart[i].chast == "øëåì")
+        {
+            kart[i].y = yShlem ;
+            yShlem  = yShlem  + 200;
+        }
+
+        if (kart[i].chast == "áðîíÿ")
+        {
+            kart[i].y = yBronia;
+            yBronia = yBronia + 200;
+        }
+
+         kart[i].shirina = 100;
         kart[i].vysota = 100;
         kart[i].x = 655;
+        kart[i].picture = txLoadImage(kart[i].adress.c_str());
+
         kart[i].vysota_bmp = get_height(kart[i].adress);
         kart[i].shirina_bmp = get_widht(kart[i].adress);
     }
@@ -119,21 +107,21 @@ int main()
         pictr[i].shirina_bmp = kart[i].shirina_bmp;
         pictr[i].vysota_bmp = kart[i].vysota_bmp;
 
-        if (pictr[i].chast == "ËÀÏÊÈ")
+        if (pictr[i].chast == "ëàïêè")
         {
             pictr[i].x = 330;
             pictr[i].y = 400;
             pictr[i].shirina = SHIRINA_LAPKI;
             pictr[i].vysota = VYSOTA_LAPKI;
         }
-        if (pictr[i].chast == "ØËÅÌ")
+        if (pictr[i].chast == "øëåì")
         {
             pictr[i].x = 320;
             pictr[i].y = 80;
             pictr[i].shirina = SHIRINA_SHLEM;
             pictr[i].vysota = VYSOTA_SHLEM;
         }
-        if (pictr[i].chast == "ÁÐÎÍß")
+        if (pictr[i].chast == "áðîíÿ")
         {
             pictr[i].x = 280;
             pictr[i].y = 235;
@@ -252,7 +240,7 @@ int main()
 
         for (int vybor = 0; vybor < 9; vybor = vybor + 1)
         {
-            if (clickNaKnopka(kart[vybor], chast))
+            if (clickNaVariant(kart[vybor], chast))
             {
                  for (int nomer = 0; nomer < 9; nomer = nomer + 1)
                  {
