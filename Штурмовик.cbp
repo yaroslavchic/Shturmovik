@@ -7,7 +7,7 @@
 		<Option compiler="gnu_gcc_compiler__strict__fast_single_files_only" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/Штурмовик" prefix_auto="1" extension_auto="1" />
+				<Option output="Штурмовик" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="0" />
 				<Option compiler="gnu_gcc_compiler__strict__fast_single_files_only" />
@@ -32,6 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="kartinka.cpp" />
+		<Unit filename="knopka.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
