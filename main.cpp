@@ -1,56 +1,15 @@
 #include "TXLib.h"
 #include "knopka.cpp"
+#include "kartinka.cpp"
 #include <string>
+#include <iostream>
+#include <fstream>
+
 
 using namespace std;
 
-struct Kartinka
-{
-    int y;
-    string adress;
-    HDC picture;
-    string chast;
-    int shirina_bmp;
-    int vysota_bmp;
-    int x;
-    int shirina;
-    int vysota;
-    bool clicked;
-};
 
-bool clickNaKnopka(Kartinka kart, string vybrannaya_chast)
-{
-        if (txMouseButtons() == 1 &&
-            kart.chast == vybrannaya_chast &&
-            txMouseX() > kart.x &&
-            txMouseX() < kart.x + kart.shirina &&
-            txMouseY() > kart.y &&
-            txMouseY() < kart.y + kart.vysota)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-}
 
-bool clickNaKartinka(Kartinka kart)
-{
-        if (txMouseButtons() == 1 &&
-            kart.clicked &&
-            txMouseX() > kart.x &&
-            txMouseX() < kart.x + kart.shirina &&
-            txMouseY() > kart.y &&
-            txMouseY() < kart.y + kart.vysota)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-}
 int get_widht  (string adress)
 {
 	unsigned char info[54];
@@ -85,27 +44,58 @@ int main()
     HDC picture = txLoadImage("Pics\\Штурмовик1.bmp");
 
     Knopka knopka[4];
-    knopka[0] = {50, 50, "ШЛЕМ"};
-    knopka[1] = {50, 150, "БРОНЯ"};
-    knopka[2] = {50, 250, "ЛАПКИ"};
+    knopka[0] = {50, 50, "шлем"};
+    knopka[1] = {50, 150, "броня"};
+    knopka[2] = {50, 250, "лапки"};
     knopka[3] = {50, 300, "Cправочечка"};
 
     Kartinka kart[9];
-    kart[0] = {     0,   "Pics\\шлем1.bmp", txLoadImage("Pics\\шлем1.bmp"), "ШЛЕМ", 120};
-    kart[1] = {  200, "Pics\\шлем2.bmp", txLoadImage("Pics\\шлем2.bmp"), "ШЛЕМ", 142};
-    kart[2] = {  400,  "Pics\\ШлЕм.bmp",txLoadImage("Pics\\ШлЕм.bmp"), "ШЛЕМ", 140};
-    kart[3] = {     0,  "Pics\\броня1.bmp", txLoadImage("Pics\\броня1.bmp"), "БРОНЯ", 157};
-    kart[4] = {  200,  "Pics\\броня2.bmp",txLoadImage("Pics\\броня2.bmp"), "БРОНЯ", 159};
-    kart[5] = {  400,   "Pics\\броня3.bmp", txLoadImage("Pics\\броня3.bmp"), "БРОНЯ", 38};
-    kart[6] = {     0,  "Pics\\лапки1.bmp",txLoadImage("Pics\\лапки1.bmp"), "ЛАПКИ", 104};
-    kart[7] = {  200, "Pics\\лапки2.bmp", txLoadImage("Pics\\лапки2.bmp"), "ЛАПКИ", 100};
-    kart[8] = {  400, "Pics\\лапки3.bmp", txLoadImage("Pics\\лапки3.bmp"), "ЛАПКИ", 100};
+    kart[0] = {  "Pics\\шлем\\шлем1.bmp"};
+    kart[1] = {  "Pics\\шлем\\шлем2.bmp"};
+    kart[2] = {  "Pics\\шлем\\ШлЕм.bmp"};
+    kart[3] = {  "Pics\\броня\\броня1.bmp"};
+    kart[4] = {  "Pics\\броня\\броня2.bmp"};
+    kart[5] = {  "Pics\\броня\\броня3.bmp"};
+    kart[6] = {  "Pics\\лапки\\лапки1.bmp"};
+    kart[7] = {  "Pics\\лапки\\лапки2.bmp"};
+    kart[8] = {  "Pics\\лапки\\лапки3.bmp"};
 
+    int yShlem = 0;
+    int yBronia = 0;
+    int yLapok = 0;
     for (int i = 0; i < 9; i = i + 1)
     {
-        kart[i].shirina = 100;
+        setlocale(LC_ALL,"Russian");
+
+        string stroka = kart[i].adress;
+        int pos1 = stroka.find("\\");
+        int pos2 = stroka.find("\\", pos1 + 2);
+        kart[i].chast = stroka.substr(pos1 + 1, pos2 - pos1 - 1);
+
+
+        if (kart[i].chast == "лапки")
+        {
+            kart[i].y = yLapok;
+            yLapok = yLapok + 200;
+        }
+
+        if (kart[i].chast == "шлем")
+        {
+            kart[i].y = yShlem ;
+            yShlem  = yShlem  + 200;
+        }
+
+        if (kart[i].chast == "броня")
+        {
+            kart[i].y = yBronia;
+            yBronia = yBronia + 200;
+        }
+
+         kart[i].shirina = 100;
         kart[i].vysota = 100;
         kart[i].x = 655;
+        kart[i].picture = txLoadImage(kart[i].adress.c_str());
+
         kart[i].vysota_bmp = get_height(kart[i].adress);
         kart[i].shirina_bmp = get_widht(kart[i].adress);
     }
@@ -113,27 +103,28 @@ int main()
     Kartinka pictr[9];
     for (int i = 0; i < 9; i = i + 1)
     {
+        pictr[i].adress = kart[i].adress;
         pictr[i].picture = kart[i].picture;
         pictr[i].clicked = false;
         pictr[i].chast = kart[i].chast;
         pictr[i].shirina_bmp = kart[i].shirina_bmp;
         pictr[i].vysota_bmp = kart[i].vysota_bmp;
 
-        if (pictr[i].chast == "ЛАПКИ")
+        if (pictr[i].chast == "лапки")
         {
             pictr[i].x = 330;
             pictr[i].y = 400;
             pictr[i].shirina = SHIRINA_LAPKI;
             pictr[i].vysota = VYSOTA_LAPKI;
         }
-        if (pictr[i].chast == "ШЛЕМ")
+        if (pictr[i].chast == "шлем")
         {
             pictr[i].x = 320;
             pictr[i].y = 80;
             pictr[i].shirina = SHIRINA_SHLEM;
             pictr[i].vysota = VYSOTA_SHLEM;
         }
-        if (pictr[i].chast == "БРОНЯ")
+        if (pictr[i].chast == "броня")
         {
             pictr[i].x = 280;
             pictr[i].y = 235;
@@ -144,6 +135,31 @@ int main()
 
 
 
+
+    string stroka;
+    string stroka_x;
+    ifstream file("1.txt");
+
+    while(file.good())
+    {
+        getline(file, stroka);
+        getline(file, stroka_x);
+        getline(file, stroka_y);
+
+        for (int i = 0; i < 9; i = i + 1)
+        {
+            if (pictr[i].adress == stroka)
+            {
+                pictr[i].clicked = true;
+                pictr[i].x = atoi(stroka_x.c_str());
+                 pictr[i].x = atoi(stroka_y.c_str());
+            }
+        }
+        //Бегает по всем картинкам
+        //Если адрес совпал
+        //Делаем картинку видимой
+    }
+    file.close();
 
 
 
@@ -252,7 +268,7 @@ int main()
 
         for (int vybor = 0; vybor < 9; vybor = vybor + 1)
         {
-            if (clickNaKnopka(kart[vybor], chast))
+            if (clickNaVariant(kart[vybor], chast))
             {
                  for (int nomer = 0; nomer < 9; nomer = nomer + 1)
                  {
