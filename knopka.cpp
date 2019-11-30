@@ -9,7 +9,8 @@ struct Knopka
 
 void risovatKnopka(Knopka knopka1, string chast)
 {
-    txSetColor(TX_WHITE);
+    txSelectFont("Arial", 24);
+    txSetColor(TX_YELLOW);
     if (chast == knopka1.text)
     {
         txSetColor(TX_RED);

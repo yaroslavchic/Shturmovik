@@ -43,11 +43,13 @@ int main()
     HDC fon = txLoadImage("Pics\\Фон.bmp");
     HDC picture = txLoadImage("Pics\\Штурмовик1.bmp");
 
-    Knopka knopka[4];
+    Knopka knopka[6];
     knopka[0] = {50, 50, "шлем"};
     knopka[1] = {50, 150, "броня"};
     knopka[2] = {50, 250, "лапки"};
     knopka[3] = {50, 300, "Cправочечка"};
+     knopka[4] = {50, 350, "Загрузить"};
+      knopka[5] = {50, 400, "Cохранить"};
 
     Kartinka kart[9];
     kart[0] = {  "Pics\\шлем\\шлем1.bmp"};
@@ -138,28 +140,30 @@ int main()
 
     string stroka;
     string stroka_x;
+    string stroka_y;
     ifstream file("1.txt");
 
     while(file.good())
     {
         getline(file, stroka);
-        getline(file, stroka_x);
-        getline(file, stroka_y);
-
-        for (int i = 0; i < 9; i = i + 1)
+        if (stroka.size() > 1)
         {
-            if (pictr[i].adress == stroka)
+            getline(file, stroka_x);
+            getline(file, stroka_y);
+
+            for (int i = 0; i < 9; i = i + 1)
             {
-                pictr[i].clicked = true;
-                pictr[i].x = atoi(stroka_x.c_str());
-                 pictr[i].x = atoi(stroka_y.c_str());
+                if (pictr[i].adress == stroka)
+                {
+                    pictr[i].clicked = true;
+                    pictr[i].x = atoi(stroka_x.c_str());
+                     pictr[i].y = atoi(stroka_y.c_str());
+                }
             }
         }
-        //Бегает по всем картинкам
-        //Если адрес совпал
-        //Делаем картинку видимой
     }
     file.close();
+
 
 
 
@@ -167,12 +171,12 @@ int main()
     bool spravka_vyzvana = false;
     int nomer_vybrannoi_chasti = -10;
 
-    while(true)
+    while(!GetAsyncKeyState(VK_ESCAPE))
     {
         txBegin();
 
         txBitBlt(txDC(), 0, 0, 800, 600,  fon, 0, 0);
-        for (int i = 0; i < 4; i = i + 1)
+        for (int i = 0; i < 6; i = i + 1)
         {
             risovatKnopka(knopka[i], chast);
         }
@@ -231,7 +235,7 @@ int main()
 
 
 
-        for (int i = 0; i <4; i = i + 1)
+        for (int i = 0; i <6; i = i + 1)
         {
         chast = getChast(knopka[i], chast);
         }
@@ -247,6 +251,7 @@ int main()
 
         if (spravka_vyzvana)
         {
+            txSelectFont("Arial", 12);
            txSetColor     (TX_BLACK);
             txRectangle (100, 200, 300, 400);
             txDrawText  (100, 200, 300, 400,
@@ -285,6 +290,20 @@ int main()
         txSleep(10);
         txEnd();
     }
+
+
+    ofstream file1("1.txt");
+
+    for (int i = 0; i < 9; i = i + 1)
+    {
+       if (pictr[i].clicked)
+        {
+            file1 << pictr[i].adress<< endl;
+            file1 << pictr[i].x << endl;
+            file1 << pictr[i].y << endl;
+        }
+    }
+    file1.close();
 
     return 0;
 }
