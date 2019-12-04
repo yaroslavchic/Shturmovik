@@ -5,10 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-
 using namespace std;
-
-
 
 int get_widht  (string adress)
 {
@@ -36,22 +33,27 @@ const int SHIRINA_BRONI = 225;
 const int VYSOTA_LAPKI = 190;
 const int SHIRINA_LAPKI = 180;
 
+const int KOLICH_KARTINOK = 12;
+
+const int SPRAVOCHECHKA = 3;
+const int CHTENIEISFAILA = 4;
+const int SOHRANIT = 5;
+
 int main()
 {
     txCreateWindow (800, 600);
 
     HDC fon = txLoadImage("Pics\\Фон.bmp");
-    HDC picture = txLoadImage("Pics\\Штурмовик1.bmp");
 
     Knopka knopka[6];
-    knopka[0] = {50, 50, "шлем"};
-    knopka[1] = {50, 150, "броня"};
-    knopka[2] = {50, 250, "лапки"};
-    knopka[3] = {50, 300, "Cправочечка"};
-     knopka[4] = {50, 350, "Загрузить"};
-      knopka[5] = {50, 400, "Cохранить"};
+    knopka[0] = {20,  30, "шлем"};
+    knopka[1] = {20, 130, "броня"};
+    knopka[2] = {20, 230, "лапки"};
+    knopka[3] = {20, 330, "Cправочечка"};
+    knopka[4] = {20, 430, "Загрузить"};
+    knopka[5] = {20, 530, "Cохранить"};
 
-    Kartinka kart[9];
+    Kartinka kart[KOLICH_KARTINOK];
     kart[0] = {  "Pics\\шлем\\шлем1.bmp"};
     kart[1] = {  "Pics\\шлем\\шлем2.bmp"};
     kart[2] = {  "Pics\\шлем\\ШлЕм.bmp"};
@@ -61,11 +63,14 @@ int main()
     kart[6] = {  "Pics\\лапки\\лапки1.bmp"};
     kart[7] = {  "Pics\\лапки\\лапки2.bmp"};
     kart[8] = {  "Pics\\лапки\\лапки3.bmp"};
+    kart[9] = {  "Pics\\шлем\\Шлем3.bmp"};
+    kart[10] = { "Pics\\броня\\броня4.bmp"};
+    kart[11] = { "Pics\\лапки\\лапки4.bmp"};
 
     int yShlem = 0;
     int yBronia = 0;
     int yLapok = 0;
-    for (int i = 0; i < 9; i = i + 1)
+    for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
     {
         setlocale(LC_ALL,"Russian");
 
@@ -78,19 +83,19 @@ int main()
         if (kart[i].chast == "лапки")
         {
             kart[i].y = yLapok;
-            yLapok = yLapok + 200;
+            yLapok = yLapok + 150;
         }
 
         if (kart[i].chast == "шлем")
         {
             kart[i].y = yShlem ;
-            yShlem  = yShlem  + 200;
+            yShlem  = yShlem  + 150;
         }
 
         if (kart[i].chast == "броня")
         {
             kart[i].y = yBronia;
-            yBronia = yBronia + 200;
+            yBronia = yBronia + 150;
         }
 
          kart[i].shirina = 100;
@@ -102,8 +107,8 @@ int main()
         kart[i].shirina_bmp = get_widht(kart[i].adress);
     }
 
-    Kartinka pictr[9];
-    for (int i = 0; i < 9; i = i + 1)
+    Kartinka pictr[KOLICH_KARTINOK];
+    for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
     {
         pictr[i].adress = kart[i].adress;
         pictr[i].picture = kart[i].picture;
@@ -138,35 +143,6 @@ int main()
 
 
 
-    string stroka;
-    string stroka_x;
-    string stroka_y;
-    ifstream file("1.txt");
-
-    while(file.good())
-    {
-        getline(file, stroka);
-        if (stroka.size() > 1)
-        {
-            getline(file, stroka_x);
-            getline(file, stroka_y);
-
-            for (int i = 0; i < 9; i = i + 1)
-            {
-                if (pictr[i].adress == stroka)
-                {
-                    pictr[i].clicked = true;
-                    pictr[i].x = atoi(stroka_x.c_str());
-                     pictr[i].y = atoi(stroka_y.c_str());
-                }
-            }
-        }
-    }
-    file.close();
-
-
-
-
     string chast = "";
     bool spravka_vyzvana = false;
     int nomer_vybrannoi_chasti = -10;
@@ -176,6 +152,8 @@ int main()
         txBegin();
 
         txBitBlt(txDC(), 0, 0, 800, 600,  fon, 0, 0);
+        txRectangle(0,0,150,txGetExtentY());
+
         for (int i = 0; i < 6; i = i + 1)
         {
             risovatKnopka(knopka[i], chast);
@@ -185,7 +163,7 @@ int main()
           //txTransparentBlt(txDC(), 275, 135, 250, 450,  picture, 0, 0, TX_WHITE);
 
 
-        for (int vybor = 0; vybor < 9; vybor = vybor + 1)
+        for (int vybor = 0; vybor < KOLICH_KARTINOK; vybor = vybor + 1)
         {
             if (clickNaKartinka(pictr[vybor]))
             {
@@ -225,7 +203,7 @@ int main()
         }
 
 
-        for (int i = 0; i < 9; i = i + 1)
+        for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
         {
             if (pictr[i].clicked)
             {
@@ -240,30 +218,102 @@ int main()
         chast = getChast(knopka[i], chast);
         }
 
+
+
     if (txMouseButtons() == 1 &&
-        txMouseX() < knopka[3].x + 200 &&
-        txMouseY() > knopka[3].y - 20 &&
-        txMouseY() < knopka[3].y + 20)
+        txMouseX() < knopka[CHTENIEISFAILA].x + 120 &&
+        txMouseY() > knopka[CHTENIEISFAILA].y &&
+        txMouseY() < knopka[CHTENIEISFAILA].y + 40)
         {
-            spravka_vyzvana = !spravka_vyzvana;
+            string stroka;
+            string stroka_x;
+            string stroka_y;
+            ifstream file("1.txt");
+
+            while(file.good())
+            {
+                getline(file, stroka);
+                if (stroka.size() > 1)
+                {
+                    getline(file, stroka_x);
+                    getline(file, stroka_y);
+
+                    for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
+                    {
+                        if (pictr[i].adress == stroka)
+                        {
+                            pictr[i].clicked = true;
+                            pictr[i].x = atoi(stroka_x.c_str());
+                             pictr[i].y = atoi(stroka_y.c_str());
+                        }
+                    }
+                }
+            }
+            file.close();
+        }
+
+
+    if (txMouseButtons() == 1 &&
+        txMouseX() < knopka[SOHRANIT].x + 120 &&
+        txMouseY() > knopka[SOHRANIT].y &&
+        txMouseY() < knopka[SOHRANIT].y + 40)
+        {
+            ofstream file1("1.txt");
+
+            for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
+            {
+               if (pictr[i].clicked)
+                {
+                    file1 << pictr[i].adress<< endl;
+                    file1 << pictr[i].x << endl;
+                    file1 << pictr[i].y << endl;
+                }
+            }
+            file1.close();
+
+            txMessageBox("Случилось");
+        }
+
+
+
+    if (txMouseButtons() == 1 && spravka_vyzvana)
+    {
+        spravka_vyzvana = false;
+    }
+
+    if (txMouseButtons() == 1 &&
+        !spravka_vyzvana &&
+        txMouseX() < knopka[SPRAVOCHECHKA].x + 120 &&
+        txMouseY() > knopka[SPRAVOCHECHKA].y &&
+        txMouseY() < knopka[SPRAVOCHECHKA].y + 40)
+        {
+            spravka_vyzvana = true;
             txSleep(200);
         }
 
         if (spravka_vyzvana)
         {
-            txSelectFont("Arial", 12);
-           txSetColor     (TX_BLACK);
-            txRectangle (100, 200, 300, 400);
-            txDrawText  (100, 200, 300, 400,
+            txSelectFont("Arial", 50);
+            txSetColor     (TX_BLACK);
+            txRectangle (0, 0, 800, 600);
+            txDrawText  (0, 0, 800, 600,
+                "Copyright:\n"
                 "Создатель Ярослав\n"
-                "В этой программе вы\n "
-                "сможете создать\n  "
-                "штурмовика из\n"
-                "Звёздных Войн");
+                "\n"
+                "В этой программе вы:\n"
+                "Сможете создать штурмовика из Star Wars\n"
+                "а также...                                                       \n"
+                "...ничего                                                         \n"
+                "\n"
+                "Управление:\n"
+                 "Перемещение стрелками, выход по Escape\n"
+                 "+ штурмовик жиреет (зажрался сволочь)\n"
+                 "-  штурмовик худеет (скоро смотр войск)"
+            );
         }
 
 
-        for (int i = 0; i < 9; i = i + 1)
+        for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
             {
             if(chast== kart[i].chast)
             {
@@ -271,11 +321,11 @@ int main()
             }
         }
 
-        for (int vybor = 0; vybor < 9; vybor = vybor + 1)
+        for (int vybor = 0; vybor < KOLICH_KARTINOK; vybor = vybor + 1)
         {
             if (clickNaVariant(kart[vybor], chast))
             {
-                 for (int nomer = 0; nomer < 9; nomer = nomer + 1)
+                 for (int nomer = 0; nomer < KOLICH_KARTINOK; nomer = nomer + 1)
                  {
                      if (pictr[vybor].chast == pictr[nomer].chast)
                      {
@@ -292,18 +342,7 @@ int main()
     }
 
 
-    ofstream file1("1.txt");
 
-    for (int i = 0; i < 9; i = i + 1)
-    {
-       if (pictr[i].clicked)
-        {
-            file1 << pictr[i].adress<< endl;
-            file1 << pictr[i].x << endl;
-            file1 << pictr[i].y << endl;
-        }
-    }
-    file1.close();
 
     return 0;
 }

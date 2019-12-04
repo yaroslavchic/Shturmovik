@@ -1,0 +1,15 @@
+#include "TXLib.h"
+
+struct Kartinka
+{
+    string adress;
+    string chast;
+    int x;
+    int y;
+    int shirina;
+    int vysota;
+    HDC picture;
+    int shirina_bmp;
+    int vysota_bmp;
+    bool clicked;
+};

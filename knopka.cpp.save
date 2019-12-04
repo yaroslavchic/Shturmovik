@@ -44,3 +44,13 @@ string getChast(Knopka knopka1, string chast)
 
     return chast;
 }
+
+    if (txMouseButtons() == 1 &&
+        !spravka_vyzvana &&
+        txMouseX() < knopka[SPRAVOCHECHKA].x + 120 &&
+        txMouseY() > knopka[SPRAVOCHECHKA].y &&
+        txMouseY() < knopka[SPRAVOCHECHKA].y + 40)
+        {
+            spravka_vyzvana = true;
+            txSleep(200);
+        }
