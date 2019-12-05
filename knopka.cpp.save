@@ -1,10 +1,50 @@
 #include "TXLib.h"
+#include <string>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+void read(int KOLICH_KARTINOK)
+{
+    string stroka;
+    string stroka_x;
+    string stroka_y;
+    ifstream file("1.txt");
+
+    while(file.good())
+    {
+        getline(file, stroka);
+        if (stroka.size() > 1)
+        {
+            getline(file, stroka_x);
+            getline(file, stroka_y);
+
+            for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
+            {
+                if (pictr[i].adress == stroka)
+                {
+                    pictr[i].clicked = true;
+                    pictr[i].x = atoi(stroka_x.c_str());
+                    pictr[i].y = atoi(stroka_y.c_str());
+                }
+            }
+        }
+    }
+    file.close();
+}
 
 struct Knopka
 {
     int x;
     int y;
     const char* text;
+
+    void onClick(int butNum, i)
+    {
+        if(butNum == 4)
+            read();
+    }
 };
 
 void risovatKnopka(Knopka knopka1, string chast)
@@ -44,13 +84,3 @@ string getChast(Knopka knopka1, string chast)
 
     return chast;
 }
-
-    if (txMouseButtons() == 1 &&
-        !spravka_vyzvana &&
-        txMouseX() < knopka[SPRAVOCHECHKA].x + 120 &&
-        txMouseY() > knopka[SPRAVOCHECHKA].y &&
-        txMouseY() < knopka[SPRAVOCHECHKA].y + 40)
-        {
-            spravka_vyzvana = true;
-            txSleep(200);
-        }
