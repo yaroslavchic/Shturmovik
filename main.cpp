@@ -95,9 +95,9 @@ int main()
     for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
     {
         pictr[i].adress = kart[i].adress;
+        pictr[i].chast = kart[i].chast;
         pictr[i].picture = kart[i].picture;
         pictr[i].clicked = false;
-        pictr[i].chast = kart[i].chast;
         pictr[i].shirina_bmp = kart[i].shirina_bmp;
         pictr[i].vysota_bmp = kart[i].vysota_bmp;
 
@@ -143,6 +143,8 @@ int main()
             risovatKnopka(knopka[i], chast);
         }
 
+
+
         //Скриншот
         if (GetAsyncKeyState(VK_SNAPSHOT))
         {
@@ -162,7 +164,40 @@ int main()
             }
         }
 
-        dwig(pictr, nomer_vybrannoi_chasti);
+        if (nomer_vybrannoi_chasti >= 0)
+        {
+            {
+                if (GetAsyncKeyState(VK_LEFT))
+                {
+                    pictr[nomer_vybrannoi_chasti].x = pictr[nomer_vybrannoi_chasti].x - 2;
+                }
+
+                if (GetAsyncKeyState(VK_RIGHT))
+                {
+                    pictr[nomer_vybrannoi_chasti].x = pictr[nomer_vybrannoi_chasti].x + 2;
+                }
+                if (GetAsyncKeyState(VK_UP))
+                {
+                    pictr[nomer_vybrannoi_chasti].y = pictr[nomer_vybrannoi_chasti].y - 2;
+                }
+                if (GetAsyncKeyState(VK_DOWN))
+                {
+                    pictr[nomer_vybrannoi_chasti].y = pictr[nomer_vybrannoi_chasti].y + 2;
+                }
+
+                if (GetAsyncKeyState(VK_OEM_PLUS))
+                {
+                    pictr[nomer_vybrannoi_chasti].shirina = pictr[nomer_vybrannoi_chasti].shirina * 1.02;
+                    pictr[nomer_vybrannoi_chasti].vysota = pictr[nomer_vybrannoi_chasti].vysota * 1.02;
+                }
+
+                if (GetAsyncKeyState(VK_OEM_MINUS))
+                {
+                    pictr[nomer_vybrannoi_chasti].shirina = pictr[nomer_vybrannoi_chasti].shirina / 1.02;
+                     pictr[nomer_vybrannoi_chasti].vysota = pictr[nomer_vybrannoi_chasti].vysota / 1.02;
+                }
+            }
+        }
 
         for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
         {
@@ -284,6 +319,33 @@ int main()
                  pictr[vybor].clicked = true;
             }
         }
+
+
+
+        if (GetAsyncKeyState('U') && nomer_vybrannoi_chasti >= 0)
+        {
+            string adress = pictr[nomer_vybrannoi_chasti].adress;
+            string chast2 = pictr[nomer_vybrannoi_chasti].chast;
+
+            if (chast2 == "лапки")
+            {
+                int pos = adress.find(chast2);
+                adress = adress.replace(pos, chast2.size(), chast2 + "4");
+
+
+                 int pos2 = adress.find("44");
+                 if (pos2 > -1)
+                 {
+                    adress = adress.replace(pos2, 2, "");
+                 }
+
+                pictr[nomer_vybrannoi_chasti].adress = adress;
+                pictr[nomer_vybrannoi_chasti].picture = txLoadImage(adress.c_str());
+                txSleep(200);
+            }
+         }
+
+
 
         txSleep(10);
         txEnd();
