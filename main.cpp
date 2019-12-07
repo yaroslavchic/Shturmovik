@@ -1,30 +1,12 @@
 #include "TXLib.h"
 #include "knopka.cpp"
 #include "kartinka.cpp"
+#include "file.cpp"
 #include <string>
 #include <iostream>
 #include <fstream>
 
 using namespace std;
-
-int get_widht  (string adress)
-{
-	unsigned char info[54];
-	FILE*f = fopen (adress.c_str() , "r");
-	fread (info, sizeof (unsigned char), 54, f);
-	int shirina =* (int*) &info[18];
-
-	return shirina;
-}
-int get_height  (string adress)
-{
-	unsigned char info[54];
-	FILE*f = fopen (adress.c_str() , "r");
-	fread (info, sizeof (unsigned char), 54, f);
-	int vysota =* (int*) &info[22];
-
-	return vysota;
-}
 
 const int VYSOTA_SHLEM= 165;
 const int SHIRINA_SHLEM = 155;
@@ -44,6 +26,7 @@ int main()
     txCreateWindow (800, 600);
 
     HDC fon = txLoadImage("Pics\\Фон.bmp");
+    txPlaySound ("музыка для игры.wav");
 
     Knopka knopka[6];
     knopka[0] = {20,  30, "шлем"};
@@ -67,6 +50,7 @@ int main()
     kart[10] = { "Pics\\броня\\броня4.bmp"};
     kart[11] = { "Pics\\лапки\\лапки4.bmp"};
 
+    //На основе адреса добавляем вариантам координаты, категории и все такое
     int yShlem = 0;
     int yBronia = 0;
     int yLapok = 0;
@@ -106,7 +90,7 @@ int main()
         kart[i].vysota_bmp = get_height(kart[i].adress);
         kart[i].shirina_bmp = get_widht(kart[i].adress);
     }
-
+         //создаёшь аватар для каждой картинки справа по центру
     Kartinka pictr[KOLICH_KARTINOK];
     for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
     {
@@ -159,10 +143,17 @@ int main()
             risovatKnopka(knopka[i], chast);
         }
 
+        //Скриншот
+        if (GetAsyncKeyState(VK_SNAPSHOT))
+        {
+            ScreenCapture(220,0,400,600, "1.bmp", txWindow());
+            txMessageBox("Сохранено в 1.bmp");
+        }
+
 
           //txTransparentBlt(txDC(), 275, 135, 250, 450,  picture, 0, 0, TX_WHITE);
 
-
+        //Выбор картинки в центре (чтобы потом передвинуть / увеличить)
         for (int vybor = 0; vybor < KOLICH_KARTINOK; vybor = vybor + 1)
         {
             if (clickNaKartinka(pictr[vybor]))
@@ -171,37 +162,7 @@ int main()
             }
         }
 
-        if (nomer_vybrannoi_chasti >= 0)
-        {
-            if (GetAsyncKeyState(VK_LEFT))
-            {
-                pictr[nomer_vybrannoi_chasti].x = pictr[nomer_vybrannoi_chasti].x - 2;
-            }
-
-            if (GetAsyncKeyState(VK_RIGHT))
-            {
-                pictr[nomer_vybrannoi_chasti].x = pictr[nomer_vybrannoi_chasti].x + 2;
-            }
-            if (GetAsyncKeyState(VK_UP))
-            {
-                pictr[nomer_vybrannoi_chasti].y = pictr[nomer_vybrannoi_chasti].y - 2;
-            }
-            if (GetAsyncKeyState(VK_DOWN))
-            {
-                pictr[nomer_vybrannoi_chasti].y = pictr[nomer_vybrannoi_chasti].y + 2;
-            }
-
-            if (GetAsyncKeyState(VK_OEM_PLUS))
-            {
-                pictr[nomer_vybrannoi_chasti].shirina = pictr[nomer_vybrannoi_chasti].shirina * 1.02;
-            }
-
-            if (GetAsyncKeyState(VK_OEM_MINUS))
-            {
-                pictr[nomer_vybrannoi_chasti].shirina = pictr[nomer_vybrannoi_chasti].shirina / 1.02;
-            }
-        }
-
+        dwig(pictr, nomer_vybrannoi_chasti);
 
         for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
         {
@@ -219,7 +180,7 @@ int main()
         }
 
 
-
+       //чтение из файла
     if (txMouseButtons() == 1 &&
         txMouseX() < knopka[CHTENIEISFAILA].x + 120 &&
         txMouseY() > knopka[CHTENIEISFAILA].y &&
@@ -258,24 +219,11 @@ int main()
         txMouseY() > knopka[SOHRANIT].y &&
         txMouseY() < knopka[SOHRANIT].y + 40)
         {
-            ofstream file1("1.txt");
-
-            for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
-            {
-               if (pictr[i].clicked)
-                {
-                    file1 << pictr[i].adress<< endl;
-                    file1 << pictr[i].x << endl;
-                    file1 << pictr[i].y << endl;
-                }
-            }
-            file1.close();
-
-            txMessageBox("Случилось");
+            saveToFile(KOLICH_KARTINOK, pictr);
         }
 
 
-
+        //справка
     if (txMouseButtons() == 1 && spravka_vyzvana)
     {
         spravka_vyzvana = false;
@@ -341,6 +289,12 @@ int main()
         txEnd();
     }
 
+    txDeleteDC(fon);
+
+    for (int i = 0; i < KOLICH_KARTINOK; i++)
+    {
+        txDeleteDC(pictr[i].picture);
+    }
 
 
 
