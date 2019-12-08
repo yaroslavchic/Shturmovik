@@ -152,9 +152,6 @@ int main()
             txMessageBox("Сохранено в 1.bmp");
         }
 
-
-          //txTransparentBlt(txDC(), 275, 135, 250, 450,  picture, 0, 0, TX_WHITE);
-
         //Выбор картинки в центре (чтобы потом передвинуть / увеличить)
         for (int vybor = 0; vybor < KOLICH_KARTINOK; vybor = vybor + 1)
         {
@@ -164,40 +161,7 @@ int main()
             }
         }
 
-        if (nomer_vybrannoi_chasti >= 0)
-        {
-            {
-                if (GetAsyncKeyState(VK_LEFT))
-                {
-                    pictr[nomer_vybrannoi_chasti].x = pictr[nomer_vybrannoi_chasti].x - 2;
-                }
-
-                if (GetAsyncKeyState(VK_RIGHT))
-                {
-                    pictr[nomer_vybrannoi_chasti].x = pictr[nomer_vybrannoi_chasti].x + 2;
-                }
-                if (GetAsyncKeyState(VK_UP))
-                {
-                    pictr[nomer_vybrannoi_chasti].y = pictr[nomer_vybrannoi_chasti].y - 2;
-                }
-                if (GetAsyncKeyState(VK_DOWN))
-                {
-                    pictr[nomer_vybrannoi_chasti].y = pictr[nomer_vybrannoi_chasti].y + 2;
-                }
-
-                if (GetAsyncKeyState(VK_OEM_PLUS))
-                {
-                    pictr[nomer_vybrannoi_chasti].shirina = pictr[nomer_vybrannoi_chasti].shirina * 1.02;
-                    pictr[nomer_vybrannoi_chasti].vysota = pictr[nomer_vybrannoi_chasti].vysota * 1.02;
-                }
-
-                if (GetAsyncKeyState(VK_OEM_MINUS))
-                {
-                    pictr[nomer_vybrannoi_chasti].shirina = pictr[nomer_vybrannoi_chasti].shirina / 1.02;
-                     pictr[nomer_vybrannoi_chasti].vysota = pictr[nomer_vybrannoi_chasti].vysota / 1.02;
-                }
-            }
-        }
+        dwig(pictr, nomer_vybrannoi_chasti);
 
         for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
         {
@@ -216,10 +180,10 @@ int main()
 
 
        //чтение из файла
-    if (txMouseButtons() == 1 &&
-        txMouseX() < knopka[CHTENIEISFAILA].x + 120 &&
-        txMouseY() > knopka[CHTENIEISFAILA].y &&
-        txMouseY() < knopka[CHTENIEISFAILA].y + 40)
+        if (txMouseButtons() == 1 &&
+            txMouseX() < knopka[CHTENIEISFAILA].x + 120 &&
+            txMouseY() > knopka[CHTENIEISFAILA].y &&
+            txMouseY() < knopka[CHTENIEISFAILA].y + 40)
         {
             string stroka;
             string stroka_x;
@@ -249,26 +213,26 @@ int main()
         }
 
 
-    if (txMouseButtons() == 1 &&
-        txMouseX() < knopka[SOHRANIT].x + 120 &&
-        txMouseY() > knopka[SOHRANIT].y &&
-        txMouseY() < knopka[SOHRANIT].y + 40)
+        if (txMouseButtons() == 1 &&
+            txMouseX() < knopka[SOHRANIT].x + 120 &&
+            txMouseY() > knopka[SOHRANIT].y &&
+            txMouseY() < knopka[SOHRANIT].y + 40)
         {
             saveToFile(KOLICH_KARTINOK, pictr);
         }
 
 
         //справка
-    if (txMouseButtons() == 1 && spravka_vyzvana)
-    {
-        spravka_vyzvana = false;
-    }
+        if (txMouseButtons() == 1 && spravka_vyzvana)
+        {
+            spravka_vyzvana = false;
+        }
 
-    if (txMouseButtons() == 1 &&
-        !spravka_vyzvana &&
-        txMouseX() < knopka[SPRAVOCHECHKA].x + 120 &&
-        txMouseY() > knopka[SPRAVOCHECHKA].y &&
-        txMouseY() < knopka[SPRAVOCHECHKA].y + 40)
+        if (txMouseButtons() == 1 &&
+            !spravka_vyzvana &&
+            txMouseX() < knopka[SPRAVOCHECHKA].x + 120 &&
+            txMouseY() > knopka[SPRAVOCHECHKA].y &&
+            txMouseY() < knopka[SPRAVOCHECHKA].y + 40)
         {
             spravka_vyzvana = true;
             txSleep(200);
@@ -297,7 +261,7 @@ int main()
 
 
         for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
-            {
+        {
             if(chast== kart[i].chast)
             {
                 Win32::TransparentBlt(txDC(), kart[i].x,   kart[i].y, kart[i].shirina, kart[i].vysota, kart[i].picture,  0, 0, kart[i].shirina_bmp, kart[i].vysota_bmp, TX_WHITE);
@@ -321,7 +285,7 @@ int main()
         }
 
 
-
+        //Поворот лапок
         if (GetAsyncKeyState('U') && nomer_vybrannoi_chasti >= 0)
         {
             string adress = pictr[nomer_vybrannoi_chasti].adress;
