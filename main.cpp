@@ -46,7 +46,6 @@ int main()
 {
     txCreateWindow (800, 600);
 
-    HDC fon = txLoadImage("Pics\\Фон.bmp");
     txPlaySound ("музыка для игры.wav");
 
     Knopka knopka[6];
@@ -66,6 +65,10 @@ Kartinka kart[1000];
     KOLICH_KARTINOK = chtenie("Pics\\броня\\", KOLICH_KARTINOK,kart);
     KOLICH_KARTINOK = chtenie("Pics\\лапки\\", KOLICH_KARTINOK,kart);
     KOLICH_KARTINOK = chtenie("Pics\\лапки4\\", KOLICH_KARTINOK,kart);
+
+    HDC fon = txLoadImage("Pics/Фон.bmp");
+    HDC fan = txLoadImage("Pics/Фон2.bmp");
+    HDC fen = txLoadImage("Pics/Фон3.bmp");
 
 
     //На основе адреса добавляем вариантам координаты, категории и все такое
@@ -141,6 +144,58 @@ Kartinka kart[1000];
             pictr[i].vysota = VYSOTA_BRONI;
         }
     }
+
+
+
+
+
+
+     bool GemeStart = false;
+
+    while (GemeStart == false)//Выбор фона
+    {
+        txSelectFont("Arial", 95);
+        txTextOut(100,10, "Выбери фон");
+
+        Win32::TransparentBlt (txDC(),  50, 200, 200, 150, fon, 0, 0, 800,600,-1);
+        Win32::TransparentBlt (txDC(), 300, 200, 200, 150, fan, 0, 0, 800,600,-1);
+        Win32::TransparentBlt (txDC(), 550, 200, 200, 150, fen, 0, 0, 800,600,-1);
+
+
+        if (txMouseButtons() & 1)
+        {
+            if (    txMouseX() > 50  &&
+                    txMouseX() < 50 + 200 &&
+                    txMouseY() > 200  &&
+                    txMouseY() < 200 + 150)
+            {
+                fon = fon;
+                GemeStart = true;
+            }
+            if (    txMouseX() > 300  &&
+                    txMouseX() < 300 + 200 &&
+                    txMouseY() > 200  &&
+                    txMouseY() < 200 + 150)
+            {
+                fon = fan;
+                GemeStart = true;
+            }
+
+            if (    txMouseX() > 550  &&
+                    txMouseX() < 550 + 200 &&
+                    txMouseY() > 200  &&
+                    txMouseY() < 200 + 150)
+            {
+                fon = fen;
+                GemeStart = true;
+            }
+        }
+
+        txSleep(10);
+
+    }
+
+
 
 
 
@@ -330,7 +385,7 @@ Kartinka kart[1000];
 
 
 
-        txSleep(10);
+        txSleep(60);
         txEnd();
     }
     //удаляет все картинки
