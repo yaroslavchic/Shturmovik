@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
+#include "dirent.h"
 using namespace std;
 
 const int VYSOTA_SHLEM= 165;
@@ -15,11 +15,32 @@ const int SHIRINA_BRONI = 225;
 const int VYSOTA_LAPKI = 190;
 const int SHIRINA_LAPKI = 180;
 
-const int KOLICH_KARTINOK = 12;
 
 const int SPRAVOCHECHKA = 3;
 const int CHTENIEISFAILA = 4;
 const int SOHRANIT = 5;
+
+
+int chtenie(string adress, int KOLICH_KARTINOK, Kartinka pic[])
+{
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir (adress.c_str())) != NULL)
+    {
+      while ((ent = readdir (dir)) != NULL)
+      {
+        if ((string)ent->d_name != "." &&
+            (string)ent->d_name != "..")
+        {
+            pic[KOLICH_KARTINOK] = { adress + (string)ent->d_name };
+            KOLICH_KARTINOK = KOLICH_KARTINOK + 1;
+        }
+      }
+      closedir (dir);
+    }
+
+    return KOLICH_KARTINOK;
+}
 
 int main()
 {
@@ -36,19 +57,16 @@ int main()
     knopka[4] = {20, 430, "Загрузить"};
     knopka[5] = {20, 530, "Cохранить"};
 
-    Kartinka kart[KOLICH_KARTINOK];
-    kart[0] = {  "Pics\\шлем\\шлем1.bmp"};
-    kart[1] = {  "Pics\\шлем\\шлем2.bmp"};
-    kart[2] = {  "Pics\\шлем\\ШлЕм.bmp"};
-    kart[3] = {  "Pics\\броня\\броня1.bmp"};
-    kart[4] = {  "Pics\\броня\\броня2.bmp"};
-    kart[5] = {  "Pics\\броня\\броня3.bmp"};
-    kart[6] = {  "Pics\\лапки\\лапки1.bmp"};
-    kart[7] = {  "Pics\\лапки\\лапки2.bmp"};
-    kart[8] = {  "Pics\\лапки\\лапки3.bmp"};
-    kart[9] = {  "Pics\\шлем\\Шлем3.bmp"};
-    kart[10] = { "Pics\\броня\\броня4.bmp"};
-    kart[11] = { "Pics\\лапки\\лапки4.bmp"};
+
+
+Kartinka kart[1000];
+
+    int KOLICH_KARTINOK = 0;
+    KOLICH_KARTINOK = chtenie("Pics\\шлем\\", KOLICH_KARTINOK, kart);
+    KOLICH_KARTINOK = chtenie("Pics\\броня\\", KOLICH_KARTINOK,kart);
+    KOLICH_KARTINOK = chtenie("Pics\\лапки\\", KOLICH_KARTINOK,kart);
+    KOLICH_KARTINOK = chtenie("Pics\\лапки4\\", KOLICH_KARTINOK,kart);
+
 
     //На основе адреса добавляем вариантам координаты, категории и все такое
     int yShlem = 0;
@@ -127,7 +145,7 @@ int main()
 
 
 
-    string chast = "";
+    string vybrannaya_chast = "";
     bool spravka_vyzvana = false;
     int nomer_vybrannoi_chasti = -10;
 
@@ -140,7 +158,7 @@ int main()
 
         for (int i = 0; i < 6; i = i + 1)
         {
-            risovatKnopka(knopka[i], chast);
+            risovatKnopka(knopka[i], vybrannaya_chast);
         }
 
 
@@ -175,7 +193,7 @@ int main()
 
         for (int i = 0; i <6; i = i + 1)
         {
-        chast = getChast(knopka[i], chast);
+        vybrannaya_chast = getChast(knopka[i], vybrannaya_chast);
         }
 
 
@@ -235,7 +253,7 @@ int main()
             txMouseY() < knopka[SPRAVOCHECHKA].y + 40)
         {
             spravka_vyzvana = true;
-            txSleep(200);
+            txSleep(2000);
         }
 
         if (spravka_vyzvana)
@@ -254,23 +272,24 @@ int main()
                 "\n"
                 "Управление:\n"
                  "Перемещение стрелками, выход по Escape\n"
+                 "Поворот лапок u\n"
                  "+ штурмовик жиреет (зажрался сволочь)\n"
                  "-  штурмовик худеет (скоро смотр войск)"
             );
         }
 
-
+                     // если ты выбрал шлем и картинка шлем то ты её рисуешь
         for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
         {
-            if(chast== kart[i].chast)
+            if (vybrannaya_chast == kart[i].chast)
             {
                 Win32::TransparentBlt(txDC(), kart[i].x,   kart[i].y, kart[i].shirina, kart[i].vysota, kart[i].picture,  0, 0, kart[i].shirina_bmp, kart[i].vysota_bmp, TX_WHITE);
             }
         }
-
+                 //выбор картинки
         for (int vybor = 0; vybor < KOLICH_KARTINOK; vybor = vybor + 1)
         {
-            if (clickNaVariant(kart[vybor], chast))
+            if (clickNaVariant(kart[vybor], vybrannaya_chast))
             {
                  for (int nomer = 0; nomer < KOLICH_KARTINOK; nomer = nomer + 1)
                  {
@@ -314,7 +333,7 @@ int main()
         txSleep(10);
         txEnd();
     }
-
+    //удаляет все картинки
     txDeleteDC(fon);
 
     for (int i = 0; i < KOLICH_KARTINOK; i++)
