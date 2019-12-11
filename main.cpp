@@ -95,9 +95,9 @@ int main()
     for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
     {
         pictr[i].adress = kart[i].adress;
+        pictr[i].chast = kart[i].chast;
         pictr[i].picture = kart[i].picture;
         pictr[i].clicked = false;
-        pictr[i].chast = kart[i].chast;
         pictr[i].shirina_bmp = kart[i].shirina_bmp;
         pictr[i].vysota_bmp = kart[i].vysota_bmp;
 
@@ -143,15 +143,14 @@ int main()
             risovatKnopka(knopka[i], chast);
         }
 
+
+
         //Скриншот
         if (GetAsyncKeyState(VK_SNAPSHOT))
         {
             ScreenCapture(220,0,400,600, "1.bmp", txWindow());
             txMessageBox("Сохранено в 1.bmp");
         }
-
-
-          //txTransparentBlt(txDC(), 275, 135, 250, 450,  picture, 0, 0, TX_WHITE);
 
         //Выбор картинки в центре (чтобы потом передвинуть / увеличить)
         for (int vybor = 0; vybor < KOLICH_KARTINOK; vybor = vybor + 1)
@@ -181,10 +180,10 @@ int main()
 
 
        //чтение из файла
-    if (txMouseButtons() == 1 &&
-        txMouseX() < knopka[CHTENIEISFAILA].x + 120 &&
-        txMouseY() > knopka[CHTENIEISFAILA].y &&
-        txMouseY() < knopka[CHTENIEISFAILA].y + 40)
+        if (txMouseButtons() == 1 &&
+            txMouseX() < knopka[CHTENIEISFAILA].x + 120 &&
+            txMouseY() > knopka[CHTENIEISFAILA].y &&
+            txMouseY() < knopka[CHTENIEISFAILA].y + 40)
         {
             string stroka;
             string stroka_x;
@@ -214,26 +213,26 @@ int main()
         }
 
 
-    if (txMouseButtons() == 1 &&
-        txMouseX() < knopka[SOHRANIT].x + 120 &&
-        txMouseY() > knopka[SOHRANIT].y &&
-        txMouseY() < knopka[SOHRANIT].y + 40)
+        if (txMouseButtons() == 1 &&
+            txMouseX() < knopka[SOHRANIT].x + 120 &&
+            txMouseY() > knopka[SOHRANIT].y &&
+            txMouseY() < knopka[SOHRANIT].y + 40)
         {
             saveToFile(KOLICH_KARTINOK, pictr);
         }
 
 
         //справка
-    if (txMouseButtons() == 1 && spravka_vyzvana)
-    {
-        spravka_vyzvana = false;
-    }
+        if (txMouseButtons() == 1 && spravka_vyzvana)
+        {
+            spravka_vyzvana = false;
+        }
 
-    if (txMouseButtons() == 1 &&
-        !spravka_vyzvana &&
-        txMouseX() < knopka[SPRAVOCHECHKA].x + 120 &&
-        txMouseY() > knopka[SPRAVOCHECHKA].y &&
-        txMouseY() < knopka[SPRAVOCHECHKA].y + 40)
+        if (txMouseButtons() == 1 &&
+            !spravka_vyzvana &&
+            txMouseX() < knopka[SPRAVOCHECHKA].x + 120 &&
+            txMouseY() > knopka[SPRAVOCHECHKA].y &&
+            txMouseY() < knopka[SPRAVOCHECHKA].y + 40)
         {
             spravka_vyzvana = true;
             txSleep(200);
@@ -262,7 +261,7 @@ int main()
 
 
         for (int i = 0; i < KOLICH_KARTINOK; i = i + 1)
-            {
+        {
             if(chast== kart[i].chast)
             {
                 Win32::TransparentBlt(txDC(), kart[i].x,   kart[i].y, kart[i].shirina, kart[i].vysota, kart[i].picture,  0, 0, kart[i].shirina_bmp, kart[i].vysota_bmp, TX_WHITE);
@@ -284,6 +283,33 @@ int main()
                  pictr[vybor].clicked = true;
             }
         }
+
+
+        //Поворот лапок
+        if (GetAsyncKeyState('U') && nomer_vybrannoi_chasti >= 0)
+        {
+            string adress = pictr[nomer_vybrannoi_chasti].adress;
+            string chast2 = pictr[nomer_vybrannoi_chasti].chast;
+
+            if (chast2 == "лапки")
+            {
+                int pos = adress.find(chast2);
+                adress = adress.replace(pos, chast2.size(), chast2 + "4");
+
+
+                 int pos2 = adress.find("44");
+                 if (pos2 > -1)
+                 {
+                    adress = adress.replace(pos2, 2, "");
+                 }
+
+                pictr[nomer_vybrannoi_chasti].adress = adress;
+                pictr[nomer_vybrannoi_chasti].picture = txLoadImage(adress.c_str());
+                txSleep(200);
+            }
+         }
+
+
 
         txSleep(10);
         txEnd();
