@@ -148,4 +148,3 @@ bool ScreenCapture(int x, int y, int width, int height, char *filename, HWND hwn
 
     return ret;
 }
-
